@@ -182,7 +182,7 @@ See [Access control](https://cloud.google.com/monitoring/access-control) from 
 5. Click **Continue**.
 6. Connect to a datadog dashboard
   - Copy the protocol and domain part of the URL such as https://app.datadoghq.com/ 
-  - Append a trailing `api/` to create the following URL `https://app.datadoghq.com/api/`, The trailing forward slash after `api` (`api/`) is mandatory. Also, if your URL has `v1` at the end of it, remove `v1`.
+  - Append a trailing `api/` to create the following URL `https://app.datadoghq.com/api/`, The trailing forward slash after `api` (`api/`) is mandatory.
   - In **URL** field, enter the URL `https://app.datadoghq.com/api/` as indicated below : 
 
    
