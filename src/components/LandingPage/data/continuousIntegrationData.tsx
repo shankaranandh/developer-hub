@@ -63,6 +63,17 @@ export const FeaturedList: CardItem[] = [
     time: '9 min',
     link: "/tutorials/ci-pipelines/tfc-notification",
   },
+  {
+    title: "Swift application",
+    module: MODULES.ci,
+    description:
+      "Build a Docker Image of a Swift application.",
+    link: "/tutorials/ci-pipelines/build/swift",
+    type: [docType.Documentation],
+    time: "15 min",
+    icon: "img/icon_ci.svg",
+    newDoc: true,
+  },
 ];
 
 export const DroneList: CardItem[] = [
@@ -139,6 +150,17 @@ export const CIList: CardItem[] = [
     type: [docType.Documentation],
     time: '9 min',
     link: "/tutorials/ci-pipelines/tfc-notification",
+  },
+  {
+    title: "Swift application",
+    module: MODULES.ci,
+    description:
+      "Build a Docker Image of a Swift application.",
+    link: "/tutorials/ci-pipelines/build/swift",
+    type: [docType.Documentation],
+    time: "15 min",
+    icon: "img/icon_ci.svg",
+    newDoc: true,
   },
   {
     title: "Amazon ECR",

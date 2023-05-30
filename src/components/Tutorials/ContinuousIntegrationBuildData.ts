@@ -53,6 +53,14 @@ import { MODULES } from "../../constants";
           time: '9 min',
           link: "/tutorials/ci-pipelines/tfc-notification",
         },
+        {
+          title: "Swift application",
+          module: MODULES.ci,
+          description:
+            "Build a Docker Image of a Swift application.",
+          link: "/tutorials/ci-pipelines/build/swift",
+          newDoc: true,
+        },
       ],
     },
   ];
