@@ -44,7 +44,7 @@ export const FeaturedList: CardItem[] = [
         Use a Run step to include CodeCov code coverage.
       </>
     ),
-    newDoc: true,
+    newDoc: false,
     type: [docType.Documentation],
     time: "15 min",
     link: "/tutorials/ci-pipelines/test/codecov",
@@ -58,7 +58,7 @@ export const FeaturedList: CardItem[] = [
        Terraform Cloud notifications can trigger CI pipelines through custom CI webhooks.
       </>
     ),
-    newDoc: true,
+    newDoc: false,
     type: [docType.Documentation],
     time: '9 min',
     link: "/tutorials/ci-pipelines/tfc-notification",
@@ -69,6 +69,17 @@ export const FeaturedList: CardItem[] = [
     description:
       "Build a Docker Image of a Swift application.",
     link: "/tutorials/ci-pipelines/build/swift",
+    type: [docType.Documentation],
+    time: "15 min",
+    icon: "img/icon_ci.svg",
+    newDoc: true,
+  },
+  {
+    title: "Python application",
+    module: MODULES.ci,
+    description:
+      "Build a Docker Image of a Python application.",
+    link: "/tutorials/ci-pipelines/build/python",
     type: [docType.Documentation],
     time: "15 min",
     icon: "img/icon_ci.svg",
@@ -152,12 +163,23 @@ export const CIList: CardItem[] = [
     newDoc: true,
   },
   {
+    title: "Python application",
+    module: MODULES.ci,
+    description:
+      "Build a Docker Image of a Python application.",
+    link: "/tutorials/ci-pipelines/build/python",
+    type: [docType.Documentation],
+    time: "15 min",
+    icon: "img/icon_ci.svg",
+    newDoc: true,
+  },
+  {
     title: "Terraform Cloud notification triggers",
     module: MODULES.ci,
     icon: "img/icon_ci.svg",
     description:
       "Terraform Cloud notifications can trigger CI pipelines through custom CI webhooks.",
-    newDoc: true,
+    newDoc: false,
     type: [docType.Documentation],
     time: '9 min',
     link: "/tutorials/ci-pipelines/tfc-notification",
@@ -191,7 +213,7 @@ export const CIList: CardItem[] = [
     type: [docType.Documentation],
     time: "15 min",
     icon: "img/icon_ci.svg",
-    newDoc: true,
+    newDoc: false,
   },
   {
     title: "Publish Allure Report",
