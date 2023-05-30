@@ -141,17 +141,6 @@ export const CIList: CardItem[] = [
     icon: "img/icon_ci.svg",
   },
   {
-    title: "Terraform Cloud notification triggers",
-    module: MODULES.ci,
-    icon: "img/icon_ci.svg",
-    description:
-      "Terraform Cloud notifications can trigger CI pipelines through custom CI webhooks.",
-    newDoc: true,
-    type: [docType.Documentation],
-    time: '9 min',
-    link: "/tutorials/ci-pipelines/tfc-notification",
-  },
-  {
     title: "Swift application",
     module: MODULES.ci,
     description:
@@ -161,6 +150,17 @@ export const CIList: CardItem[] = [
     time: "15 min",
     icon: "img/icon_ci.svg",
     newDoc: true,
+  },
+  {
+    title: "Terraform Cloud notification triggers",
+    module: MODULES.ci,
+    icon: "img/icon_ci.svg",
+    description:
+      "Terraform Cloud notifications can trigger CI pipelines through custom CI webhooks.",
+    newDoc: true,
+    type: [docType.Documentation],
+    time: '9 min',
+    link: "/tutorials/ci-pipelines/tfc-notification",
   },
   {
     title: "Amazon ECR",
