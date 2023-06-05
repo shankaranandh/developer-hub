@@ -49,7 +49,6 @@ Use **Run** steps to install dependencies in the build environment.
 
 ```mdx-code-block
 </TabItem>
-
 <TabItem value="Self-hosted">
 ```
 
@@ -98,7 +97,6 @@ Add caching to your `stage.spec`.
 
 ```mdx-code-block
 </TabItem>
-
 <TabItem value="Self-hosted">
 ```
 
@@ -162,9 +160,8 @@ Here's an example of a pipeline with **Save Cache to S3** and **Restore Cache fr
                       - "/root/.cache"
                     archiveFormat: Tar
 ```
- 
-</details>
 
+</details>
 
 ```mdx-code-block
 </TabItem>
@@ -196,7 +193,6 @@ Add [Run steps](/docs/continuous-integration/use-ci/run-ci-scripts/run-step-sett
 
 ```mdx-code-block
 </TabItem>
-
 <TabItem value="Self-hosted">
 ```
 
@@ -297,7 +293,6 @@ You will need a [personal access token](https://docs.github.com/en/authenticatio
 
 ```mdx-code-block
 </TabItem>
-
 <TabItem value="Self-hosted">
 ```
 
@@ -526,7 +521,6 @@ pipeline:
 
 ```mdx-code-block
 </TabItem>
-
 <TabItem value="Self-hosted">
 ```
 

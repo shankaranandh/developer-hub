@@ -51,7 +51,6 @@ Add [Run steps](/docs/continuous-integration/use-ci/run-ci-scripts/run-step-sett
 
 ```mdx-code-block
 </TabItem>
-
 <TabItem value="Self-hosted">
 ```
 
@@ -134,6 +133,7 @@ Use **Run** steps to install dependencies in the build environment. [Plugin step
 </TabItem>
 </Tabs>
 ```
+
 ## Cache dependencies
 
 ```mdx-code-block
@@ -292,7 +292,6 @@ If your application requires a specific Node version, add a **Run** step to inst
 
 ```mdx-code-block
 </TabItem>
-
 <TabItem value="Self-hosted">
 ```
 
@@ -359,7 +358,7 @@ Here's a YAML example of a pipeline that:
 1. Tests a Node code repo.
 2. Builds and pushes an image to Docker Hub.
 
-This pipeline uses [Harness Cloud build infrastructure](/docs/continuous-integration/use-ci/set-up-build-infrastructure/use-harness-cloud-build-infrastructure), [Cache Intelligence](/docs/continuous-integration/use-ci/caching-ci-data/cache-intelligence), and [Test Intelligence](/docs/continuous-integration/ci-quickstarts/test-intelligence-concepts).
+This pipeline uses [Harness Cloud build infrastructure](/docs/continuous-integration/use-ci/set-up-build-infrastructure/use-harness-cloud-build-infrastructure) and [Cache Intelligence](/docs/continuous-integration/use-ci/caching-ci-data/cache-intelligence).
 
 If you copy this example, replace the bracketed values with corresponding values for your Harness project, connector IDs, account/user names, and repo names.
 

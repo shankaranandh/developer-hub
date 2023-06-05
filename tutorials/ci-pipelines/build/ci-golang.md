@@ -116,7 +116,6 @@ For your pipeline to produce test reports, you need to modify the **Run** step t
 
 ```mdx-code-block
 </TabItem>
-
 <TabItem value="Self-hosted">
 ```
 
@@ -166,7 +165,6 @@ If necessary, add a **Run** step to install any dependencies.
 
 ```mdx-code-block
 </TabItem>
-
 <TabItem value="Self-hosted">
 ```
 
@@ -207,7 +205,6 @@ Cache your Go module dependencies with [**Cache Intelligence**](/docs/continuous
 
 ```mdx-code-block
 </TabItem>
-
 <TabItem value="Self-hosted">
 ```
 
@@ -346,7 +343,6 @@ If your application requires a specific version of Go, add a **Run** step to ins
 
 ```mdx-code-block
 </TabItem>
-
 <TabItem value="Self-hosted">
 ```
 
@@ -369,7 +365,6 @@ Specify the desired [Golang Docker image](https://hub.docker.com/_/golang) tag i
 ```
 
 </details>
-
 
 <details>
 <summary>Build using multiple versions of Go</summary>
@@ -572,7 +567,6 @@ pipeline:
 
 ```mdx-code-block
 </TabItem>
-
 <TabItem value="Self-hosted">
 ```
 

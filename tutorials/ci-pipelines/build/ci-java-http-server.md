@@ -26,14 +26,14 @@ This guide assumes you've created a Harness CI pipeline. For more information ab
 
 ```mdx-code-block
 <Tabs>
-  <TabItem value="hosted" label="Harness cloud" default>
+<TabItem value="hosted" label="Harness cloud" default>
 ```
 
 You can use **Run** or **Run Tests** steps to [run tests in CI pipelines](/docs/continuous-integration/use-ci/set-up-test-intelligence/run-tests-in-ci).
 
 ```mdx-code-block
 <Tabs>
-  <TabItem value="run" label="Run step" default>
+<TabItem value="run" label="Run step" default>
 ```
 
 This example uses two [Run steps](/docs/continuous-integration/use-ci/run-ci-scripts/run-step-settings/) to build and test with Maven.
@@ -63,8 +63,8 @@ This example uses two [Run steps](/docs/continuous-integration/use-ci/run-ci-scr
 ```
 
 ```mdx-code-block
-  </TabItem>
-  <TabItem value="runtests" label="Run Tests step (Test Intelligence)">
+</TabItem>
+<TabItem value="runtests" label="Run Tests step (Test Intelligence)">
 ```
 
 You must use the [Run Tests step](/docs/continuous-integration/use-ci/set-up-test-intelligence/configure-run-tests-step-settings) for your unit tests if you want to leverage Harness' [Test Intelligence](/docs/continuous-integration/ci-quickstarts/test-intelligence-concepts) feature.
@@ -93,20 +93,20 @@ The following example runs `mvn test` (declared in `args`), and then runs `mvn p
 ```
 
 ```mdx-code-block
-  </TabItem>
+</TabItem>
 </Tabs>
 ```
 
 ```mdx-code-block
-  </TabItem>
-  <TabItem value="selfhosted" label="Self-hosted">
+</TabItem>
+<TabItem value="selfhosted" label="Self-hosted">
 ```
 
 You can use **Run** or **Run Tests** steps to [run tests in CI pipelines](/docs/continuous-integration/use-ci/set-up-test-intelligence/run-tests-in-ci).
 
 ```mdx-code-block
 <Tabs>
-  <TabItem value="run" label="Run step" default>
+<TabItem value="run" label="Run step" default>
 ```
 
 This example uses two [Run steps](/docs/continuous-integration/use-ci/run-ci-scripts/run-step-settings/) to build and test with Maven.
@@ -138,8 +138,8 @@ This example uses two [Run steps](/docs/continuous-integration/use-ci/run-ci-scr
 ```
 
 ```mdx-code-block
-  </TabItem>
-  <TabItem value="runtests" label="Run Tests step (Test Intelligence)">
+</TabItem>
+<TabItem value="runtests" label="Run Tests step (Test Intelligence)">
 ```
 
 You must use the [Run Tests step](/docs/continuous-integration/use-ci/set-up-test-intelligence/configure-run-tests-step-settings) for your unit tests if you want to leverage Harness' [Test Intelligence](/docs/continuous-integration/ci-quickstarts/test-intelligence-concepts) feature.
@@ -170,12 +170,12 @@ The following example runs `mvn test` (declared in `args`), and then runs `mvn p
 ```
 
 ```mdx-code-block
-  </TabItem>
+</TabItem>
 </Tabs>
 ```
 
 ```mdx-code-block
-  </TabItem>
+</TabItem>
 </Tabs>
 ```
 
@@ -241,7 +241,6 @@ With Harness Cloud build infrastructure, use [Cache Intelligence](/docs/continuo
 
 ```mdx-code-block
 </TabItem>
-
 <TabItem value="Self-hosted">
 ```
 

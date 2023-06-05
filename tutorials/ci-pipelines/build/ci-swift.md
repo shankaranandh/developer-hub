@@ -12,7 +12,7 @@ import TabItem from '@theme/TabItem';
 import CISignupTip from '/tutorials/shared/ci-signup-tip.md';
 ```
 
-You can build and test a [Swift](https://developer.apple.com/swift/) application using a macOS platform on [Harness Cloud](/docs/continuous-integration/use-ci/set-up-build-infrastructure/use-harness-cloud-build-infrastructure) or a [self-hosted VM](/docs/continuous-integration/use-ci/set-up-build-infrastructure/vm-build-infrastructure/define-macos-build-infra-with-anka-registry/) build infrastructure.
+You can build and test a [Swift](https://developer.apple.com/documentation/xcode/building-swift-packages-or-apps-that-use-them-in-continuous-integration-workflows/) application using a macOS platform on [Harness Cloud](/docs/continuous-integration/use-ci/set-up-build-infrastructure/use-harness-cloud-build-infrastructure) or a [self-hosted VM](/docs/continuous-integration/use-ci/set-up-build-infrastructure/vm-build-infrastructure/define-macos-build-infra-with-anka-registry/) build infrastructure.
 
 This guide assumes you've created a Harness CI pipeline. For more information about creating pipelines, go to:
 
@@ -22,9 +22,16 @@ This guide assumes you've created a Harness CI pipeline. For more information ab
 
 <CISignupTip />
 
+To learn more about Apple M1 support for Harness CI pipelines, go to the [Apple M1 and Harness blog post](https://www.harness.io/blog/ios-build-pipelines-apple-m1).
+
 ## Build and run tests
 
 Add [Run steps](/docs/continuous-integration/use-ci/run-ci-scripts/run-step-settings/) to build and [run tests in Harness CI](/docs/continuous-integration/use-ci/set-up-test-intelligence/run-tests-in-ci).
+
+<!-- not sure how to get the results. Default output is *.xcresult.
+https://developer.apple.com/documentation/appstoreconnectapi/read_test_result_information
+xcpretty -ruby gem - junit format report - https://github.com/xcpretty/xcpretty
+fastlane? -->
 
 ```mdx-code-block
 <Tabs>
@@ -34,19 +41,13 @@ Add [Run steps](/docs/continuous-integration/use-ci/run-ci-scripts/run-step-sett
 ```yaml
               - step:
                   type: Run
-                  name: npm test
-                  identifier: npm_test
+                  name: Run xcode
+                  identifier: Run_xcode
                   spec:
                     shell: Sh
                     command: |-
-                      npm install
-                      npm run build --if-present
-                      npm test
-                    reports:
-                      type: JUnit
-                      spec:
-                        paths:
-                          - report.xml
+                      xcodebuild
+                      xcodebuild test -scheme SampleApp
 ```
 
 ```mdx-code-block
@@ -55,24 +56,18 @@ Add [Run steps](/docs/continuous-integration/use-ci/run-ci-scripts/run-step-sett
 <TabItem value="Self-hosted">
 ```
 
+<!-- these commands may be the same? Should xcode already be installed on the VM? -->
+
 ```yaml
               - step:
                   type: Run
-                  name: npm test
-                  identifier: npm test
+                  name: Run xcode
+                  identifier: Run_xcode
                   spec:
-                    connectorRef: account.harnessImage
-                    image: node:latest
                     shell: Sh
                     command: |-
-                      npm install
-                      npm run build --if-present
-                      npm test
-                    reports:
-                      type: JUnit
-                      spec:
-                        paths:
-                          - report.xml
+                      xcodebuild
+                      xcodebuild test -scheme SampleApp
 ```
 
 ```mdx-code-block
@@ -82,7 +77,9 @@ Add [Run steps](/docs/continuous-integration/use-ci/run-ci-scripts/run-step-sett
 
 ### Visualize test results
 
-If you want to [view test results in Harness](/docs/continuous-integration/use-ci/set-up-test-intelligence/viewing-tests/),  make sure your test commands produce reports in JUnit XML format and that your steps include the `reports` specification.
+If you want to [view test results in Harness](/docs/continuous-integration/use-ci/set-up-test-intelligence/viewing-tests/), your test reports must be in JUnit XML format, and your steps that run tests must include the `reports` specification.
+
+<!-- Need a run step to setup XCpretty before the test step? Then include the commands to modify the test report in the Run (for tests) step? -->
 
 ```yaml
                     reports:
@@ -95,6 +92,8 @@ If you want to [view test results in Harness](/docs/continuous-integration/use-c
 ## Install dependencies
 
 Use **Run** steps to install dependencies in the build environment. [Plugin steps](/docs/continuous-integration/use-ci/use-drone-plugins/explore-ci-plugins) are also useful for installing dependencies. You can use [Background steps](/docs/continuous-integration/use-ci/manage-dependencies/background-step-settings) to run dependent services that are needed by multiple steps in the same stage.
+
+<!-- what dependencies are there for Swift? Maybe Ruby + xcpretty? -->
 
 ```mdx-code-block
 <Tabs>
@@ -134,7 +133,10 @@ Use **Run** steps to install dependencies in the build environment. [Plugin step
 </TabItem>
 </Tabs>
 ```
+
 ## Cache dependencies
+
+<!-- Can you use Cache Intelligence for macos? Are there save/restore cache step requirements for macOS/swift? -->
 
 ```mdx-code-block
 <Tabs>
@@ -207,6 +209,8 @@ Here's an example of a pipeline with **Save Cache to S3** and **Restore Cache fr
 <TabItem value="Harness Cloud">
 ```
 
+<!-- xcode pre-installed on Hosted. Switch between versions. Install additional versions. Are there other tool versions that you might need to switch between? -->
+
 Node is pre-installed on Hosted Cloud runners. For details about all available tools and versions, go to [Platforms and image specifications](/docs/continuous-integration/use-ci/set-up-build-infrastructure/use-harness-cloud-build-infrastructure#platforms-and-image-specifications).
 
 If your application requires a specific Node version, add a **Run** step to install it.
@@ -266,9 +270,10 @@ If your application requires a specific Node version, add a **Run** step to inst
 
 ```mdx-code-block
 </TabItem>
-
 <TabItem value="Self-hosted">
 ```
+
+<!-- not sure how version switching is handled with VM -->
 
 Specify the desired [Node Docker image](https://hub.docker.com/_/node) tag in your steps. There is no need for a separate install step when using Docker.
 
@@ -328,12 +333,14 @@ Specify the desired [Node Docker image](https://hub.docker.com/_/node) tag in yo
 
 ## Full pipeline examples
 
+<!-- need to replace this when I have answers to the other questions -->
+
 Here's a YAML example of a pipeline that:
 
 1. Tests a Node code repo.
 2. Builds and pushes an image to Docker Hub.
 
-This pipeline uses [Harness Cloud build infrastructure](/docs/continuous-integration/use-ci/set-up-build-infrastructure/use-harness-cloud-build-infrastructure), [Cache Intelligence](/docs/continuous-integration/use-ci/caching-ci-data/cache-intelligence), and [Test Intelligence](/docs/continuous-integration/ci-quickstarts/test-intelligence-concepts).
+This pipeline uses [Harness Cloud build infrastructure](/docs/continuous-integration/use-ci/set-up-build-infrastructure/use-harness-cloud-build-infrastructure) and [Cache Intelligence](/docs/continuous-integration/use-ci/caching-ci-data/cache-intelligence).
 
 If you copy this example, replace the bracketed values with corresponding values for your Harness project, connector IDs, account/user names, and repo names.
 
