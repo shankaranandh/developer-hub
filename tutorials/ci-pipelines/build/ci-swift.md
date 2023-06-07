@@ -401,6 +401,112 @@ pipeline:
 
 </details>
 
+<details>
+<summary>YAML Example: Fastlane build</summary>
+
+```yaml
+pipeline:
+  name: osx-demo
+  identifier: osxdemo
+  projectIdentifier: CI_Sanity
+  orgIdentifier: default
+  tags: {}
+  properties:
+    ci:
+      codebase:
+        connectorRef: YOUR_CODEBASE_CONNECTOR_ID
+        repoName: YOUR_REPO_NAME
+        build: <+input>
+  stages:
+    - stage:
+        name: Fastlane
+        identifier: Fastlane
+        description: ""
+        type: CI
+        spec:
+          caching:
+            enabled: true
+            paths:
+              - /Users/anka/Library/Developer/Xcode/DerivedData
+          cloneCodebase: true
+          platform:
+            os: MacOS
+            arch: Arm64
+          runtime:
+            type: Cloud
+            spec: {}
+          execution:
+            steps:
+              - step:
+                  type: Run
+                  name: Fastlane Build
+                  identifier: Fastlane_Build
+                  spec:
+                    shell: Sh
+                    command: |-
+                      export LC_ALL=en_US.UTF-8
+                      export LANG=en_US.UTF-8
+
+                      export APP_ID="YOUR_APP_ID"
+                      export APP_STORE_CONNECT_KEY_ID="YOUR_STORE_CONNECT_KEY_ID"
+                      export APP_STORE_CONNECT_ISSUER_ID="YOUR_STORE_CONNECT_ISSUER_ID"
+                      export APP_STORE_CONNECT_KEY_FILEPATH="YOUR_STORE_CONNECT_KEY_FILEPATH"
+
+                      export FASTLANE_USER=YOUR_EMAIL
+                      export FASTLANE_PASSWORD=<+secrets.getValue('fastlanepassword')>
+                      export BUILD_CERTIFICATE_BASE64=<+secrets.getValue('BUILD_CERTIFICATE_BASE64')>
+                      export BUILD_PROVISION_PROFILE_BASE64=<+secrets.getValue('BUILD_PROVISION_PROFILE_BASE64')>
+                      export P12_PASSWORD=<+secrets.getValue('certpassword')>
+                      export KEYCHAIN_PASSWORD=admin
+                      export FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD=<+secrets.getValue('fastlaneapppassword')>
+                      export FASTLANE_SESSION='...TRUNCATED...'
+                      export APP_STORE_CONNECT_KEY_BASE64=<+secrets.getValue('appstoreapikey')>
+
+                      sudo xcode-select -switch /Applications/Xcode_14.1.0.app
+                      cd hello-harness
+
+                      CERTIFICATE_PATH=/tmp/certificate.p12
+                      PP_PATH=/tmp/profile.mobileprovision
+                      KEYCHAIN_PATH=/tmp/app-signing.keychain-db
+                      KEY_FILE_PATH="/tmp/store_connect_key.p8"
+
+                      echo "$BUILD_CERTIFICATE_BASE64" >> ce
+                      base64 -i ce --decode > $CERTIFICATE_PATH
+
+                      echo "$BUILD_PROVISION_PROFILE_BASE64" >> prof
+                      base64 -i prof --decode > $PP_PATH
+
+                      echo "$APP_STORE_CONNECT_KEY_BASE64" >> key_base64
+                      base64 -i key_base64 --decode > $KEY_FILE_PATH
+                      export APP_STORE_CONNECT_KEY_FILEPATH="$KEY_FILE_PATH"
+
+                      security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+                      security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+                      security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+
+                      security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+                      security list-keychain -d user -s $KEYCHAIN_PATH
+                      mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+                      cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+
+                      gem install bundler
+                      bundle install
+
+                      bundle exec fastlane beta
+                      echo $ABC
+                    envVariables:
+                      ABC: samples
+              - step:
+                  type: Run
+                  name: Run_2
+                  identifier: Run_2
+                  spec:
+                    shell: Sh
+                    command: echo $ABC
+```
+
+</details>
+
 ## Next steps
 
 Now that you have created a pipeline that builds and tests a Swift app, you could:
