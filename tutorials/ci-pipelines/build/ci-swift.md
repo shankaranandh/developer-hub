@@ -12,6 +12,15 @@ import TabItem from '@theme/TabItem';
 import CISignupTip from '/tutorials/shared/ci-signup-tip.md';
 ```
 
+<ctabanner
+  buttonText="Learn More"
+  title="Continue your learning journey."
+  tagline="Take a Continuous Integration Certification today!"
+  link="/certifications/continuous-integration"
+  closable={true}
+  target="_self"
+/>
+
 You can build and test a [Swift](https://developer.apple.com/documentation/xcode/building-swift-packages-or-apps-that-use-them-in-continuous-integration-workflows/) application using a macOS platform on [Harness Cloud](/docs/continuous-integration/use-ci/set-up-build-infrastructure/use-harness-cloud-build-infrastructure) or a [self-hosted VM](/docs/continuous-integration/use-ci/set-up-build-infrastructure/vm-build-infrastructure/define-macos-build-infra-with-anka-registry/) build infrastructure.
 
 This guide assumes you've created a Harness CI pipeline. For more information about creating pipelines, go to:
