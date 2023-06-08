@@ -33,140 +33,9 @@ This guide assumes you've created a Harness CI pipeline. For more information ab
 
 To learn more about Apple M1 support for Harness CI pipelines, go to the [Apple M1 and Harness blog post](https://www.harness.io/blog/ios-build-pipelines-apple-m1).
 
-## Build and run tests
-
-Add [Run steps](/docs/continuous-integration/use-ci/run-ci-scripts/run-step-settings/) to build and [run tests in Harness CI](/docs/continuous-integration/use-ci/set-up-test-intelligence/run-tests-in-ci).
-
-<!-- not sure how to get the results. Default output is *.xcresult.
-https://developer.apple.com/documentation/appstoreconnectapi/read_test_result_information
-xcpretty -ruby gem - junit format report - https://github.com/xcpretty/xcpretty
-fastlane? -->
-
-```mdx-code-block
-<Tabs>
-<TabItem value="Harness Cloud">
-```
-
-```yaml
-              - step:
-                  type: Run
-                  name: Run xcode
-                  identifier: Run_xcode
-                  spec:
-                    shell: Sh
-                    command: |-
-                      xcodebuild
-                      xcodebuild test -scheme SampleApp
-```
-
-```mdx-code-block
-</TabItem>
-
-<TabItem value="Self-hosted">
-```
-
-<!-- these commands may be the same? Should xcode already be installed on the VM? -->
-
-```yaml
-              - step:
-                  type: Run
-                  name: Run xcode
-                  identifier: Run_xcode
-                  spec:
-                    shell: Sh
-                    command: |-
-                      xcodebuild
-                      xcodebuild test -scheme SampleApp
-```
-
-```mdx-code-block
-</TabItem>
-</Tabs>
-```
-
-### Visualize test results
-
-If you want to [view test results in Harness](/docs/continuous-integration/use-ci/set-up-test-intelligence/viewing-tests/), your test reports must be in JUnit XML format, and your steps that run tests must include the `reports` specification.
-
-<!-- Need a run step to setup XCpretty before the test step? Then include the commands to modify the test report in the Run (for tests) step? -->
-
-```yaml
-                    reports:
-                      type: JUnit
-                      spec:
-                        paths:
-                          - report.xml
-```
-
-## Install dependencies
-
-Use **Run** steps to install dependencies in the build environment. [Plugin steps](/docs/continuous-integration/use-ci/use-drone-plugins/explore-ci-plugins) are also useful for installing dependencies. You can use [Background steps](/docs/continuous-integration/use-ci/manage-dependencies/background-step-settings) to run dependent services that are needed by multiple steps in the same stage.
-
-<!-- what dependencies are there for Swift? Maybe Ruby + xcpretty? -->
-
-```mdx-code-block
-<Tabs>
-<TabItem value="Harness Cloud">
-```
-
-```yaml
-              - step:
-                  type: Run
-                  identifier: dependencies
-                  name: Dependencies
-                  spec:
-                    shell: Sh
-                    command: |-
-                      npm install express@4.18.2 --no-save
-```
-
-```mdx-code-block
-</TabItem>
-
-<TabItem value="Self-hosted">
-```
-
-```yaml
-              - step:
-                  type: Run
-                  identifier: dependencies
-                  name: Dependencies
-                  spec:
-                    connectorRef: account.harnessImage
-                    image: node:14.18.2-alpine
-                    command: |-
-                      npm install express@14.18.2 --no-save
-```
-
-```mdx-code-block
-</TabItem>
-</Tabs>
-```
-
 ## Cache dependencies
 
-<!-- Can you use Cache Intelligence for macos? Are there save/restore cache step requirements for macOS/swift? -->
-
-```mdx-code-block
-<Tabs>
-  <TabItem value="cloud" label="Harness Cloud" default>
-```
-
-With Harness Cloud build infrastructure, use [Cache Intelligence](/docs/continuous-integration/use-ci/caching-ci-data/cache-intelligence) to automate caching of Node dependencies. Add `caching.enabled.true` to your `stage.spec`.
-
-```yaml
-    - stage:
-        spec:
-          caching:
-            enabled: true
-```
-
-```mdx-code-block
-  </TabItem>
-  <TabItem value="selfhosted" label="Self-hosted">
-```
-
-With self-hosted build infrastructures, you can:
+To cache your Swift dependencies, you can:
 
 * [Save and Restore Cache from S3](/docs/continuous-integration/use-ci/caching-ci-data/saving-cache/)
 * [Save and Restore Cache from GCS](/docs/continuous-integration/use-ci/caching-ci-data/save-cache-in-gcs)
@@ -206,106 +75,102 @@ Here's an example of a pipeline with **Save Cache to S3** and **Restore Cache fr
                     archiveFormat: Tar
 ```
 
-```mdx-code-block
-  </TabItem>
-</Tabs>
-```
+## Build and run tests
 
-## Specify version
+Add [Run steps](/docs/continuous-integration/use-ci/run-ci-scripts/run-step-settings/) to build and [run tests in Harness CI](/docs/continuous-integration/use-ci/set-up-test-intelligence/run-tests-in-ci).
 
 ```mdx-code-block
 <Tabs>
 <TabItem value="Harness Cloud">
 ```
 
-<!-- xcode pre-installed on Hosted. Switch between versions. Install additional versions. Are there other tool versions that you might need to switch between? -->
-
-Node is pre-installed on Hosted Cloud runners. For details about all available tools and versions, go to [Platforms and image specifications](/docs/continuous-integration/use-ci/set-up-build-infrastructure/use-harness-cloud-build-infrastructure#platforms-and-image-specifications).
-
-If your application requires a specific Node version, add a **Run** step to install it.
-
-<details>
-<summary>Install one Node version</summary>
-
 ```yaml
               - step:
                   type: Run
-                  name: Install Node
-                  identifier: installnode
-                  spec:
-                    shell: Sh
-                    envVariables:
-                      NODE_VERSION: 18.16.0
-                    command: |-
-                      mkdir $HOME/nodejs
-                      curl -L https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.xz | tar xJ -C $HOME/nodejs
-                      export PATH=$HOME/nodejs/node-v${NODE_VERSION}-linux-x64/bin:$PATH
-```
-
-</details>
-
-<details>
-<summary>Install multiple Node versions</summary>
-
-1. Add the [matrix looping strategy](/docs/platform/pipelines/looping-strategies-matrix-repeat-and-parallelism/) configuration to your stage.
-
-```yaml
-    - stage:
-        strategy:
-          matrix:
-            nodeVersion:
-              - 18.16.0
-              - 20.2.0
-```
-
-2. Reference the matrix variable in your steps.
-
-```yaml
-              - step:
-                  type: Run
-                  name: Install node
-                  identifier: installnode
+                  name: test with swift
+                  identifier: test_with_swift
                   spec:
                     shell: Sh
                     command: |-
-                      mkdir $HOME/nodejs
-                      curl -L https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.xz | tar xJ -C $HOME/nodejs
-                      export PATH=$HOME/nodejs/node-v${NODE_VERSION}-linux-x64/bin:$PATH
-                    envVariables:
-                      NODE_VERSION: <+matrix.nodeVersion>
+                      swift build
+                      swift test
 ```
-
-</details>
 
 ```mdx-code-block
 </TabItem>
+
 <TabItem value="Self-hosted">
 ```
-
-<!-- not sure how version switching is handled with VM -->
-
-Specify the desired [Node Docker image](https://hub.docker.com/_/node) tag in your steps. There is no need for a separate install step when using Docker.
-
-<details>
-<summary>Use a specific Node version</summary>
 
 ```yaml
               - step:
                   type: Run
-                  name: Node Version
-                  identifier: nodeversion
+                  name: Run xcode
+                  identifier: Run_xcode
                   spec:
                     connectorRef: account.harnessImage
-                    image: node:18.16.0
+                    image: swift:latest
                     shell: Sh
                     command: |-
-                      npm version
+                      swift build
+                      swift test
+```
+
+```mdx-code-block
+</TabItem>
+</Tabs>
+```
+
+### Visualize test results
+
+If you want to [view test results in Harness](/docs/continuous-integration/use-ci/set-up-test-intelligence/viewing-tests/), your test reports must be in JUnit XML format, and your steps that run tests must include the `reports` specification. Use a tool such as the [SwiftTestReporter](https://swiftpackageindex.com/allegro/swift-junit) to produce correctly-formatted reports.
+
+```yaml
+                    reports:
+                      type: JUnit
+                      spec:
+                        paths:
+                          - report.xml
+```
+
+## Specify version
+
+The Apple App Store requires that you use a version of Swift that is included with Xcode. Using another version of Swift can make your app ineligible for the App Store.
+
+```mdx-code-block
+<Tabs>
+  <TabItem value="hosted" label="Harness Cloud" default>
+```
+
+You can use commands in a [Run step](/docs/continuous-integration/use-ci/run-ci-scripts/run-step-settings) to [download](https://www.swift.org/download/) and [install](https://www.swift.org/getting-started/) Swift.
+
+```mdx-code-block
+  </TabItem>
+  <TabItem value="selfhosted" label="Self-hosted">
+```
+
+Specify the desired [Swift Docker image](https://hub.docker.com/_/swift) tag in your steps. There is no need for a separate install step when using Docker.
+
+<details>
+<summary>Use a specific Swift version</summary>
+
+```yaml
+              - step:
+                  type: Run
+                  name: Swift Version
+                  identifier: swiftversion
+                  spec:
+                    connectorRef: account.harnessImage
+                    image: swift:5.3.3
+                    shell: Sh
+                    command: |-
+                      swift --version
 ```
 
 </details>
 
 <details>
-<summary>Use multiple node versions</summary>
+<summary>Use multiple Swift versions</summary>
 
 1. Add the [matrix looping strategy](/docs/platform/pipelines/looping-strategies-matrix-repeat-and-parallelism/) configuration to your stage.
 
@@ -313,7 +178,7 @@ Specify the desired [Node Docker image](https://hub.docker.com/_/node) tag in yo
     - stage:
         strategy:
           matrix:
-            nodeVersion:
+            swiftVersion:
               - 18.16.0
               - 20.2.0
 ```
@@ -323,198 +188,22 @@ Specify the desired [Node Docker image](https://hub.docker.com/_/node) tag in yo
 ```yaml
               - step:
                   type: Run
-                  name: Node Version
-                  identifier: nodeversion
+                  name: Swift Version
+                  identifier: swiftversion
                   spec:
                     connectorRef: account.harnessImage
-                    image: node:<+matrix.nodeVersion>
+                    image: node:<+matrix.swiftVersion>
                     shell: Sh
                     command: |-
-                      npm version
+                      swift --version
 ```
 
 </details>
 
 ```mdx-code-block
-</TabItem>
+  </TabItem>
 </Tabs>
 ```
-
-## Full pipeline examples
-
-<!-- need to replace this when I have answers to the other questions -->
-
-Here's a YAML example of a pipeline that:
-
-1. Tests a Node code repo.
-2. Builds and pushes an image to Docker Hub.
-
-This pipeline uses [Harness Cloud build infrastructure](/docs/continuous-integration/use-ci/set-up-build-infrastructure/use-harness-cloud-build-infrastructure) and [Cache Intelligence](/docs/continuous-integration/use-ci/caching-ci-data/cache-intelligence).
-
-If you copy this example, replace the bracketed values with corresponding values for your Harness project, connector IDs, account/user names, and repo names.
-
-<details>
-<summary>Pipeline YAML</summary>
-
-```yaml
-pipeline:
-  name: nodejs-sample
-  identifier: nodejssample
-  projectIdentifier: [project-ID]
-  orgIdentifier: default
-  tags: {}
-  stages:
-    - stage:
-        name: Build Node App
-        identifier: Build_Node_App
-        description: ""
-        type: CI
-        spec:
-          cloneCodebase: true
-          caching:
-            enabled: true
-          platform:
-            os: Linux
-            arch: Amd64
-          runtime:
-            type: Cloud
-            spec: {}
-          execution:
-            steps:
-              - step:
-                  type: Run
-                  name: npm test
-                  identifier: npm_test
-                  spec:
-                    shell: Sh
-                    command: |-
-                      npm install
-                      npm run build --if-present
-                      npm test
-              - step:
-                  type: BuildAndPushDockerRegistry
-                  name: BuildAndPushDockerRegistry_1
-                  identifier: BuildAndPushDockerRegistry_1
-                  spec:
-                    connectorRef: [Docker-connector-ID]
-                    repo: [Docker-Hub-username]/[Docker-repo]
-                    tags:
-                      - <+pipeline.sequenceId>
-  properties:
-    ci:
-      codebase:
-        connectorRef: [code-repo-connector]
-        repoName: [scm-account-name]/[repo-name]
-        build: <+input>
-```
-
-</details>
-
-<details>
-<summary>YAML Example: Fastlane build</summary>
-
-```yaml
-pipeline:
-  name: osx-demo
-  identifier: osxdemo
-  projectIdentifier: CI_Sanity
-  orgIdentifier: default
-  tags: {}
-  properties:
-    ci:
-      codebase:
-        connectorRef: YOUR_CODEBASE_CONNECTOR_ID
-        repoName: YOUR_REPO_NAME
-        build: <+input>
-  stages:
-    - stage:
-        name: Fastlane
-        identifier: Fastlane
-        description: ""
-        type: CI
-        spec:
-          caching:
-            enabled: true
-            paths:
-              - /Users/anka/Library/Developer/Xcode/DerivedData
-          cloneCodebase: true
-          platform:
-            os: MacOS
-            arch: Arm64
-          runtime:
-            type: Cloud
-            spec: {}
-          execution:
-            steps:
-              - step:
-                  type: Run
-                  name: Fastlane Build
-                  identifier: Fastlane_Build
-                  spec:
-                    shell: Sh
-                    command: |-
-                      export LC_ALL=en_US.UTF-8
-                      export LANG=en_US.UTF-8
-
-                      export APP_ID="YOUR_APP_ID"
-                      export APP_STORE_CONNECT_KEY_ID="YOUR_STORE_CONNECT_KEY_ID"
-                      export APP_STORE_CONNECT_ISSUER_ID="YOUR_STORE_CONNECT_ISSUER_ID"
-                      export APP_STORE_CONNECT_KEY_FILEPATH="YOUR_STORE_CONNECT_KEY_FILEPATH"
-
-                      export FASTLANE_USER=YOUR_EMAIL
-                      export FASTLANE_PASSWORD=<+secrets.getValue('fastlanepassword')>
-                      export BUILD_CERTIFICATE_BASE64=<+secrets.getValue('BUILD_CERTIFICATE_BASE64')>
-                      export BUILD_PROVISION_PROFILE_BASE64=<+secrets.getValue('BUILD_PROVISION_PROFILE_BASE64')>
-                      export P12_PASSWORD=<+secrets.getValue('certpassword')>
-                      export KEYCHAIN_PASSWORD=admin
-                      export FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD=<+secrets.getValue('fastlaneapppassword')>
-                      export FASTLANE_SESSION='...TRUNCATED...'
-                      export APP_STORE_CONNECT_KEY_BASE64=<+secrets.getValue('appstoreapikey')>
-
-                      sudo xcode-select -switch /Applications/Xcode_14.1.0.app
-                      cd hello-harness
-
-                      CERTIFICATE_PATH=/tmp/certificate.p12
-                      PP_PATH=/tmp/profile.mobileprovision
-                      KEYCHAIN_PATH=/tmp/app-signing.keychain-db
-                      KEY_FILE_PATH="/tmp/store_connect_key.p8"
-
-                      echo "$BUILD_CERTIFICATE_BASE64" >> ce
-                      base64 -i ce --decode > $CERTIFICATE_PATH
-
-                      echo "$BUILD_PROVISION_PROFILE_BASE64" >> prof
-                      base64 -i prof --decode > $PP_PATH
-
-                      echo "$APP_STORE_CONNECT_KEY_BASE64" >> key_base64
-                      base64 -i key_base64 --decode > $KEY_FILE_PATH
-                      export APP_STORE_CONNECT_KEY_FILEPATH="$KEY_FILE_PATH"
-
-                      security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-                      security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
-                      security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-
-                      security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-                      security list-keychain -d user -s $KEYCHAIN_PATH
-                      mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-                      cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
-
-                      gem install bundler
-                      bundle install
-
-                      bundle exec fastlane beta
-                      echo $ABC
-                    envVariables:
-                      ABC: samples
-              - step:
-                  type: Run
-                  name: Run_2
-                  identifier: Run_2
-                  spec:
-                    shell: Sh
-                    command: echo $ABC
-```
-
-</details>
 
 ## Next steps
 
