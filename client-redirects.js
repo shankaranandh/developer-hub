@@ -2454,6 +2454,26 @@ module.exports = {
       to: "/docs/chaos-engineering/technical-reference/chaos-faults/aws/alb-az-down",
     },
     {
+      from: "/docs/chaos-engineering/chaos-faults/aws/ecs-fargate-cpu-hog",
+      to: "/docs/chaos-engineering/technical-reference/chaos-faults/aws/ecs-fargate-cpu-hog",
+    },
+    {
+      from: "/docs/chaos-engineering/chaos-faults/aws/ecs-fargate-memory-hog",
+      to: "/docs/chaos-engineering/technical-reference/chaos-faults/aws/ecs-fargate-memory-hog",
+    },
+    {
+      from: "/docs/chaos-engineering/chaos-faults/aws/ecs-container-volume-detach",
+      to: "/docs/chaos-engineering/technical-reference/chaos-faults/aws/ecs-container-volume-detach",
+    },
+    {
+      from: "/docs/chaos-engineering/chaos-faults/aws/nlb-az-down",
+      to: "/docs/chaos-engineering/technical-reference/chaos-faults/aws/nlb-az-down",
+    },
+    {
+      from: "/docs/chaos-engineering/chaos-faults/aws/resource-access-restrict",
+      to: "/docs/chaos-engineering/technical-reference/chaos-faults/aws/resource-access-restrict",
+    },
+    {
       from: "/docs/chaos-engineering/chaos-faults/aws/clb-az-down",
       to: "/docs/chaos-engineering/technical-reference/chaos-faults/aws/clb-az-down",
     },
