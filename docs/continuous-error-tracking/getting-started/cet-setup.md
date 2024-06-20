@@ -12,11 +12,9 @@ This topic describes how to add a monitored service in Harness and install an Er
 
 ## Add a monitored service
 
-A Harness Monitored Service is a combination of service and environment. Harness monitors the following via a monitored service:
+A Harness Monitored Service is a combination of service and environment. For Continuous Error Tracking, Harness monitors the following via a monitored service:
 
 * Code-level exceptions and errors from the data collected by the Error Tracking Agent.
-* Changes such as deployments, incidents such as PagerDuty, and infrastructure changes such as Kubernetes events and auditing.
-* Health trend deviations using logs and metrics obtained from the APM and logging tools.
 
 The following steps explain how to create a monitored service, and define service and environments for tracking code errors and exceptions:
 
